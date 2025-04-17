@@ -1,79 +1,119 @@
-function displayUserInfo( urlSync, username ) {
-    // Cập nhật và hiển thị thông tin người dùng
-    if ( document.getElementById( 'yamaha-ex-display-url-sync' ) ) {
-        document.getElementById( 'yamaha-ex-display-url-sync' ).textContent = 'URL Sync: ' + urlSync;
+/**
+ * Yamaha Extension - Authentication and configuration manager
+ */
+class YamahaExtensionAuth {
+    constructor() {
+        this.urlSyncInput = document.getElementById('yamaha-ex-url-sync');
+        this.usernameInput = document.getElementById('yamaha-ex-username');
+        this.passwordInput = document.getElementById('yamaha-ex-password');
+        this.loginBtn = document.getElementById('yamaha-ex-login-btn');
+        this.clearBtn = document.getElementById('yamaha-ex-clear-btn');
+        this.loginForm = document.getElementById('yamaha-ex-login-form');
+        this.userInfoContainer = document.getElementById('yamaha-ex-user-info');
+        this.urlSyncDisplay = document.getElementById('yamaha-ex-display-url-sync');
+        this.usernameDisplay = document.getElementById('yamaha-ex-display-username');
+
+        this.initialize();
     }
-    if ( document.getElementById( 'yamaha-ex-display-username' ) ) {
-        document.getElementById( 'yamaha-ex-display-username' ).textContent = 'Username: ' + username;
+
+    initialize() {
+        this.loadExistingCredentials();
+        this.setupEventListeners();
     }
-    if ( document.getElementById( 'yamaha-ex-login-form' ) ) {
-        document.getElementById( 'yamaha-ex-login-form' ).style.display = 'none'; // Ẩn form đăng nhập
-    }
-    if ( document.getElementById( 'yamaha-ex-user-info' ) ) {
-        document.getElementById( 'yamaha-ex-user-info' ).style.display = 'block'; // Hiển thị thông tin người dùng
-    }
-}
 
-const loginBtn = document.getElementById( 'yamaha-ex-login-btn' );
-
-if ( loginBtn !== null ) {
-    loginBtn.addEventListener( 'click', function () {
-        const urlSync = document.getElementById( 'yamaha-ex-url-sync' ).value;
-        const username = document.getElementById( 'yamaha-ex-username' ).value;
-        const password = document.getElementById( 'yamaha-ex-password' ).value;
-
-        // Lưu vào Local Storage
-        chrome.storage.local.set( { 'urlSync': urlSync, 'username': username, 'password': password }, function () {
-            console.log( 'Thành công', 'Thông tin đã được lưu.', 'success' );
-            displayUserInfo( urlSync, username );
-        } );
-    } );
-
-}
-
-function clearUserInfo() {
-    console.log( 'clear info' );
-    // Cập nhật và hiển thị thông tin người dùng
-    document.getElementById( 'yamaha-ex-display-url-sync' ).textContent = '';
-    document.getElementById( 'yamaha-ex-display-username' ).textContent = '';
-    document.getElementById( 'yamaha-ex-url-sync' ).value = '';
-    document.getElementById( 'yamaha-ex-username' ).value = '';
-    document.getElementById( 'yamaha-ex-password' ).value = '';
-    chrome.storage.local.clear( function () {
-        console.log( 'Thành công', 'Thông tin đã được xóa.', 'success' );
-    } )
-
-    document.getElementById( 'yamaha-ex-login-form' ).style.display = 'block'; // Ẩn form đăng nhập
-    document.getElementById( 'yamaha-ex-user-info' ).style.display = 'none'; // Hiển thị thông tin người dùng
-}
-
-const getBtn = document.getElementById( 'yamaha-ex-get-btn' );
-if ( getBtn !== null ) {
-    getBtn.addEventListener( 'click', function () {
-        retrieveInformation()
-    } );
-}
-
-const clearBtn = document.getElementById( 'yamaha-ex-clear-btn' );
-if ( clearBtn !== null ) {
-    clearBtn.addEventListener( 'click', function () {
-        clearUserInfo();
-    } );
-}
-
-
-function retrieveInformation() {
-    chrome.storage.local.get( [ 'urlSync', 'username', 'password' ], function ( items ) {
-        if ( items.urlSync && items.username ) {
-            displayUserInfo( items.urlSync, items.username );
-            // Đã đăng nhập, hiển thị thông tin hoặc chuyển trang
-            return items;
-        } else {
-            // Chưa đăng nhập, quay lại trang đăng nhập
-            console.log( 'Warning', 'Yamaha extension chưa được đăng nhập', 'danger' );
-            return null;
+    setupEventListeners() {
+        if (this.loginBtn) {
+            this.loginBtn.addEventListener('click', () => this.saveCredentials());
         }
-    } );
+
+        if (this.clearBtn) {
+            this.clearBtn.addEventListener('click', () => this.clearCredentials());
+        }
+    }
+
+    loadExistingCredentials() {
+        chrome.storage.local.get(['urlSync', 'username'], (items) => {
+            if (items.urlSync && items.username) {
+                this.displayUserInfo(items.urlSync, items.username);
+            }
+        });
+    }
+
+    saveCredentials() {
+        const urlSync = this.normalizeUrlSync(this.urlSyncInput.value);
+        const username = this.usernameInput.value.trim();
+        const password = this.passwordInput.value;
+
+        if (!urlSync || !username || !password) {
+            console.error('Missing required fields');
+            return;
+        }
+
+        chrome.storage.local.set({
+            'urlSync': urlSync,
+            'username': username,
+            'password': password
+        }, () => {
+            console.log('Thông tin đã được lưu thành công');
+            this.displayUserInfo(urlSync, username);
+        });
+    }
+
+    normalizeUrlSync(url) {
+        if (!url) return '';
+
+        url = url.trim();
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            url = 'https://' + url;
+        }
+
+        if (!url.endsWith('/')) {
+            url = url + '/';
+        }
+
+        return url;
+    }
+
+    displayUserInfo(urlSync, username) {
+        if (this.urlSyncDisplay) {
+            this.urlSyncDisplay.textContent = 'URL Sync: ' + urlSync;
+        }
+
+        if (this.usernameDisplay) {
+            this.usernameDisplay.textContent = 'Username: ' + username;
+        }
+
+        if (this.loginForm) {
+            this.loginForm.className = 'hidden';
+        }
+
+        if (this.userInfoContainer) {
+            this.userInfoContainer.className = 'bg-white rounded-lg shadow-md p-4 mb-4';
+        }
+    }
+
+    clearCredentials() {
+        chrome.storage.local.clear(() => {
+            console.log('Thông tin đã được xóa');
+
+            if (this.urlSyncDisplay) this.urlSyncDisplay.textContent = '';
+            if (this.usernameDisplay) this.usernameDisplay.textContent = '';
+            if (this.urlSyncInput) this.urlSyncInput.value = '';
+            if (this.usernameInput) this.usernameInput.value = '';
+            if (this.passwordInput) this.passwordInput.value = '';
+
+            if (this.loginForm) {
+                this.loginForm.className = 'bg-white rounded-lg shadow-md p-4';
+            }
+
+            if (this.userInfoContainer) {
+                this.userInfoContainer.className = 'hidden';
+            }
+        });
+    }
 }
 
-retrieveInformation();
+// Initialize the extension when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', () => {
+    const yamahaAuth = new YamahaExtensionAuth();
+});

@@ -1,110 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
     <title>Yamaha sync Extension</title>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: auto;
-            width: 315px;
-            background-color: #f3f3f3;
-            font-family: Arial, sans-serif;
-        }
-
-        #yamaha-ex-login-form {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin: 5px;
-        }
-        #yamaha-ex-login-form {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin: 5px;
-        }
-
-        .yamaha-ex-form-group {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-
-        .yamaha-ex-form-group label {
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        .yamaha-ex-form-group input {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .yamaha-ex-form-group label, .yamaha-ex-form-group input {
-            flex: 1; /* Mỗi phần tử chiếm một nửa không gian */
-            margin: 5px;
-        }
-
-        #yamaha-ex-login-btn, #yamaha-ex-get-btn, #yamaha-ex-clear-btn {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            background-color: #007bff;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-
-        #yamaha-ex-login-btn:hover, #yamaha-ex-get-btn:hover, #yamaha-ex-clear-btn:hover {
-            background-color: #0056b3;
-        }
-
-        #yamaha-ex-user-info {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin: 5px;
-            width: 85%;
-        }
-
-        #yamaha-ex-display-url-sync, #yamaha-ex-display-username {
-            margin-bottom: 10px;
-        }
-    </style>
-
+    <link href="style.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body>
-<div id="yamaha-ex-user-info" style="display: none;">
-    <p id="yamaha-ex-display-url-sync"></p>
-    <p id="yamaha-ex-display-username"></p>
-<!--    <button id="yamaha-ex-get-btn">Get info</button>-->
-    <button id="yamaha-ex-clear-btn">Xoá thông tin</button>
-</div>
-<div id="yamaha-ex-login-form">
-    <div class="yamaha-ex-form-group">
-        <label for="yamaha-ex-url-sync">URL Sync:</label>
-        <input type="url" id="yamaha-ex-url-sync">
+<body class="bg-gray-100 w-[320px] p-4 font-sans">
+    <!-- User Info Panel -->
+    <div id="yamaha-ex-user-info" class="hidden bg-white rounded-lg shadow-md p-4 mb-4">
+        <div class="flex items-center justify-between mb-2">
+            <div class="flex flex-col">
+                <h3 class="text-lg font-semibold text-yamaha-blue mb-1">Thông tin kết nối</h3>
+                <p id="yamaha-ex-display-url-sync" class="text-gray-700 text-sm"></p>
+                <p id="yamaha-ex-display-username" class="text-gray-700 text-sm font-medium"></p>
+            </div>
+            <img src="logo-icon.png" alt="Yamaha Logo" class="w-10 h-10 object-contain">
+        </div>
+        <button id="yamaha-ex-clear-btn" class="w-full py-2 px-4 bg-red-500 hover:bg-red-600 text-white font-medium rounded transition duration-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            Xoá thông tin
+        </button>
     </div>
-    <div class="yamaha-ex-form-group">
-        <label for="yamaha-ex-username">Username:</label>
-        <input type="text" id="yamaha-ex-username">
+
+    <!-- Login Form Panel -->
+    <div id="yamaha-ex-login-form" class="bg-white rounded-lg shadow-md p-4">
+        <div class="flex items-center justify-between mb-3">
+            <h3 class="text-lg font-semibold text-yamaha-blue">Đăng nhập Yamaha Sync</h3>
+            <img src="logo-icon.png" alt="Yamaha Logo" class="w-8 h-8 object-contain">
+        </div>
+        
+        <div class="mb-3">
+            <label for="yamaha-ex-url-sync" class="block text-gray-700 text-sm font-medium mb-1">URL Sync:</label>
+            <input type="url" id="yamaha-ex-url-sync" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yamaha-lightblue" 
+                   placeholder="https://example.com/api/">
+        </div>
+        
+        <div class="mb-3">
+            <label for="yamaha-ex-username" class="block text-gray-700 text-sm font-medium mb-1">Tên đăng nhập:</label>
+            <input type="text" id="yamaha-ex-username" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yamaha-lightblue"
+                   placeholder="Username">
+        </div>
+        
+        <div class="mb-4">
+            <label for="yamaha-ex-password" class="block text-gray-700 text-sm font-medium mb-1">Mật khẩu:</label>
+            <input type="password" id="yamaha-ex-password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yamaha-lightblue"
+                   placeholder="Password">
+        </div>
+        
+        <button id="yamaha-ex-login-btn" class="w-full py-2 px-4 bg-yamaha-blue hover:bg-yamaha-lightblue text-white font-medium rounded transition duration-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+            </svg>
+            Lưu thông tin
+        </button>
     </div>
-    <div class="yamaha-ex-form-group">
-        <label for="yamaha-ex-password">Password:</label>
-        <input type="password" id="yamaha-ex-password">
-    </div>
-    <button id="yamaha-ex-login-btn">Lưu thông tin</button>
-</div>
-<script src="index.js"></script>
+
+    <script src="index.js"></script>
 </body>
 </html>
