@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Yamaha sync Extension</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: auto;
+            width: 315px;
+            background-color: #f3f3f3;
+            font-family: Arial, sans-serif;
+        }
+
+        #yamaha-ex-login-form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 5px;
+        }
+        #yamaha-ex-login-form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 5px;
+        }
+
+        .yamaha-ex-form-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .yamaha-ex-form-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .yamaha-ex-form-group input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .yamaha-ex-form-group label, .yamaha-ex-form-group input {
+            flex: 1; /* Mỗi phần tử chiếm một nửa không gian */
+            margin: 5px;
+        }
+
+        #yamaha-ex-login-btn, #yamaha-ex-get-btn, #yamaha-ex-clear-btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        #yamaha-ex-login-btn:hover, #yamaha-ex-get-btn:hover, #yamaha-ex-clear-btn:hover {
+            background-color: #0056b3;
+        }
+
+        #yamaha-ex-user-info {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 5px;
+            width: 85%;
+        }
+
+        #yamaha-ex-display-url-sync, #yamaha-ex-display-username {
+            margin-bottom: 10px;
+        }
+    </style>
+
+</head>
+<body>
+<div id="yamaha-ex-user-info" style="display: none;">
+    <p id="yamaha-ex-display-url-sync"></p>
+    <p id="yamaha-ex-display-username"></p>
+<!--    <button id="yamaha-ex-get-btn">Get info</button>-->
+    <button id="yamaha-ex-clear-btn">Xoá thông tin</button>
+</div>
+<div id="yamaha-ex-login-form">
+    <div class="yamaha-ex-form-group">
+        <label for="yamaha-ex-url-sync">URL Sync:</label>
+        <input type="url" id="yamaha-ex-url-sync">
+    </div>
+    <div class="yamaha-ex-form-group">
+        <label for="yamaha-ex-username">Username:</label>
+        <input type="text" id="yamaha-ex-username">
+    </div>
+    <div class="yamaha-ex-form-group">
+        <label for="yamaha-ex-password">Password:</label>
+        <input type="password" id="yamaha-ex-password">
+    </div>
+    <button id="yamaha-ex-login-btn">Lưu thông tin</button>
+</div>
+<script src="index.js"></script>
+</body>
+</html>
